@@ -8,7 +8,7 @@ const metadata = require("/metadata.json");
 export default function MintModal() {
   return (
     <div className="w-full max-w-[600px] bg-luxury-black border-gold border-[1px] rounded-3xl p-4">
-      <div className="w-full border-gold border-[1px] rounded-3xl p-16">
+      <div className="w-full border-gold border-[1px] rounded-3xl p-4 md:p-16">
         <img src="/assets/nft.png" alt="VIP Card" />
 
         <div className="border-b-[1px] border-b-gray py-8">
@@ -16,19 +16,21 @@ export default function MintModal() {
             className={robotoSlab.className + " text-center mb-4"}
           >{`TOTAL MINTED: ${25}/${150}`}</p>
           <div className="flex justify-between items-center">
-            <button className="w-[100px] h-[100px] text-5xl text-white border-gray border-[1px] rounded-md">
+            <button className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md">
               -
             </button>
-            <span className={robotoSlab.className + " text-5xl"}>{1}</span>
-            <button className="w-[100px] h-[100px] text-5xl text-white border-gray border-[1px] rounded-md">
+            <span className={robotoSlab.className + " text-lg md:text-5xl"}>
+              {1}
+            </span>
+            <button className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md">
               +
             </button>
           </div>
         </div>
 
-        <div className="flex justify-between items-center p-8 my-4">
+        <div className="flex flex-col md:flex-row justify-between items-center p-8 my-4">
           <p className={robotoSlab.className + " "}>TOTAL</p>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="bg-middle-black flex items-center py-2 px-4 rounded-2xl mr-4">
               <img
                 className="w-6 mr-2"
