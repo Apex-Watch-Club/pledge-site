@@ -1,2 +1,3 @@
-import Container from './components/Container';
-export {Container};
+import Container from "./components/Container";
+import Footer from "./components/Footer";
+export { Container, Footer };
