@@ -1,11 +1,21 @@
 import { Roboto_Slab, Readex_Pro } from "next/font/google";
+import { useHome } from "@/modules/Home";
+import { ERC20DescriptorType } from "../types";
 
 const robotoSlab = Roboto_Slab({ subsets: ["latin"] });
 const readexPro = Readex_Pro({ weight: "200", subsets: ["latin"] });
 
-const metadata = require("/metadata.json");
-
-export default function MintModal() {
+export default function MintModal({
+  tokens,
+  counter,
+  increment,
+  decrement,
+}: {
+  tokens: ERC20DescriptorType[];
+  counter: number;
+  increment: () => void;
+  decrement: () => void;
+}) {
   return (
     <div className="w-full max-w-[600px] bg-luxury-black border-gold border-[1px] rounded-3xl p-4">
       <div className="w-full border-gold border-[1px] rounded-3xl p-4 md:p-16">
@@ -16,13 +26,19 @@ export default function MintModal() {
             className={robotoSlab.className + " text-center mb-4"}
           >{`TOTAL MINTED: ${25}/${150}`}</p>
           <div className="flex justify-between items-center">
-            <button className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md">
+            <button
+              className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md"
+              onClick={decrement}
+            >
               -
             </button>
             <span className={robotoSlab.className + " text-lg md:text-5xl"}>
-              {1}
+              {counter}
             </span>
-            <button className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md">
+            <button
+              className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md"
+              onClick={increment}
+            >
               +
             </button>
           </div>
@@ -31,11 +47,11 @@ export default function MintModal() {
         <div className="flex flex-col md:flex-row justify-between items-center p-8 my-4">
           <p className={robotoSlab.className + " "}>TOTAL</p>
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="bg-middle-black flex items-center py-2 px-4 rounded-2xl mr-4">
+            <div className="hover:bg-gray hover:cursor-pointer bg-middle-black flex items-center py-2 px-4 rounded-2xl mr-4">
               <img
                 className="w-6 mr-2"
-                src={metadata.ethereum.erc20.usdt.icon}
-                alt={metadata.ethereum.erc20.usdt.name}
+                src={tokens[0].icon}
+                alt={tokens[0].name}
               />
               <img src="/assets/chevron.svg" alt="Chevron Icon" />
             </div>

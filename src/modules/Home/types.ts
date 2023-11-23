@@ -3,4 +3,11 @@ type BenefitPairType = {
   description: string;
 };
 
-export type { BenefitPairType };
+type ERC20DescriptorType = {
+  address: string;
+  name: string;
+  symbol: string;
+  icon: string;
+};
+
+export type { ERC20DescriptorType, BenefitPairType };
