@@ -4,22 +4,22 @@ import BenefitsModal from "./BenefitsModal";
 import { useHome } from "@/modules/Home";
 import { Footer } from "@/modules/shared/layout";
 import { BENEFITS } from "../constants";
-import { ERC20DescriptorType } from "../types";
 
 const metadata = require("/metadata.json");
-const tokens: ERC20DescriptorType[] = Object.values(metadata.ethereum.erc20);
 
 export default function Page() {
-  const { counter, increment, decrement } = useHome();
+  const { counter, increment, decrement, token, changeToken } = useHome();
 
   return (
     <main className="w-full bg-[url('/assets/background.jpg')] bg-cover">
       <section className="bg-dim p-4 md:p-16 flex flex-col items-center justify-center">
         <MintModal
-          tokens={tokens}
+          token={token}
+          metadata={metadata}
           counter={counter}
           increment={increment}
           decrement={decrement}
+          changeToken={changeToken}
         />
       </section>
 

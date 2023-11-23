@@ -1,5 +1,7 @@
+"use client";
 import { useState } from "react";
 import { ethers } from "ethers";
+import { AcceptableTokensType } from "../types";
 
 const ABI = require("/Pledge.json").abi;
 const RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || "";
@@ -14,5 +16,11 @@ const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "";
 // const result = Number(await contract.attachments(tokenId));
 
 export default function usePledge() {
-  return {};
+  const [token, setToken] = useState<AcceptableTokensType>("usdc");
+
+  const changeToken = (t: AcceptableTokensType) => {
+    setToken(t);
+  };
+
+  return { token, changeToken };
 }

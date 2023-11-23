@@ -1,18 +1,76 @@
+"use client";
+import { useState } from "react";
 import { Roboto_Slab, Readex_Pro } from "next/font/google";
-import { useHome } from "@/modules/Home";
 import { ERC20DescriptorType } from "../types";
+import { AcceptableTokensType } from "@/modules/shared/onchain";
 
 const robotoSlab = Roboto_Slab({ subsets: ["latin"] });
 const readexPro = Readex_Pro({ weight: "200", subsets: ["latin"] });
 
+function TokenDropdown({
+  token,
+  changeToken,
+  metadata,
+}: {
+  token: string;
+  changeToken: (t: AcceptableTokensType) => void;
+  metadata: Record<string, Record<string, Record<string, ERC20DescriptorType>>>;
+}) {
+  {
+    /*TOKEN DROPDOWN*/
+  }
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  return (
+    <button
+      className="relative hover:bg-gray hover:cursor-pointer bg-middle-black flex items-center py-2 px-4 rounded-2xl mr-4"
+      onClick={toggle}
+    >
+      <img
+        className="w-6 mr-2"
+        src={metadata.ethereum.erc20[token].icon}
+        alt={metadata.ethereum.erc20[token].name}
+      />
+      <img src="/assets/chevron.svg" alt="Chevron Icon" />
+      {isOpen && (
+        <ul className="absolute top-12 left-0 rounded-lg bg-gray w-full grid grid-cols-1 gap-1 overflow-hidden">
+          {Object.values(metadata.ethereum.erc20).map((t, idx) => (
+            <li
+              className={
+                robotoSlab.className +
+                " flex items-center hover:bg-luxury-black p-2"
+              }
+              key={idx}
+              onClick={() =>
+                changeToken(t.symbol.toLowerCase() as AcceptableTokensType)
+              }
+            >
+              <img className="w-4 h-4 mr-1" src={t.icon} alt={t.name} />
+              {t.symbol}
+            </li>
+          ))}
+        </ul>
+      )}
+    </button>
+  );
+}
+
 export default function MintModal({
-  tokens,
+  token,
+  metadata,
   counter,
+  changeToken,
   increment,
   decrement,
 }: {
-  tokens: ERC20DescriptorType[];
+  token: string;
+  metadata: Record<string, Record<string, Record<string, ERC20DescriptorType>>>;
   counter: number;
+  changeToken: (t: AcceptableTokensType) => void;
   increment: () => void;
   decrement: () => void;
 }) {
@@ -47,17 +105,14 @@ export default function MintModal({
         <div className="flex flex-col md:flex-row justify-between items-center p-8 my-4">
           <p className={robotoSlab.className + " "}>TOTAL</p>
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="hover:bg-gray hover:cursor-pointer bg-middle-black flex items-center py-2 px-4 rounded-2xl mr-4">
-              <img
-                className="w-6 mr-2"
-                src={tokens[0].icon}
-                alt={tokens[0].name}
-              />
-              <img src="/assets/chevron.svg" alt="Chevron Icon" />
-            </div>
+            <TokenDropdown
+              token={token}
+              changeToken={changeToken}
+              metadata={metadata}
+            />
             <p
               className={robotoSlab.className + " "}
-            >{`${"10000 USDT"} + GAS`}</p>
+            >{`${"10000"} ${token.toUpperCase()} + GAS`}</p>
           </div>
         </div>
 
