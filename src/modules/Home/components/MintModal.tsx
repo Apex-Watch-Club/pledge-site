@@ -27,7 +27,7 @@ export default function MintModal({
           >{`TOTAL MINTED: ${25}/${150}`}</p>
           <div className="flex justify-between items-center">
             <button
-              className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md"
+              className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md hover:border-gold hover:text-gold"
               onClick={decrement}
             >
               -
@@ -36,7 +36,7 @@ export default function MintModal({
               {counter}
             </span>
             <button
-              className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md"
+              className="w-12 h-12 md:w-[100px] md:h-[100px] md:text-5xl text-white border-gray border-[1px] rounded-md hover:border-gold hover:text-gold"
               onClick={increment}
             >
               +
