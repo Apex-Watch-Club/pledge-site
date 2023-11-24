@@ -8,18 +8,40 @@ import { BENEFITS } from "../constants";
 const metadata = require("/metadata.json");
 
 export default function Page() {
-  const { counter, increment, decrement, token, changeToken } = useHome();
+  const {
+    address,
+    counter,
+    isConnected,
+    price,
+    supply,
+    totalPledged,
+    token,
+    changeToken,
+    connect,
+    decrement,
+    disconnect,
+    increment,
+    pledge,
+  } = useHome();
 
   return (
     <main className="w-full bg-[url('/assets/background.jpg')] bg-cover">
       <section className="bg-dim p-4 md:p-16 flex flex-col items-center justify-center">
         <MintModal
+          address={address}
+          connect={connect}
+          disconnect={disconnect}
+          isConnected={isConnected}
           token={token}
           metadata={metadata}
           counter={counter}
           increment={increment}
           decrement={decrement}
           changeToken={changeToken}
+          pledge={pledge}
+          totalPledged={totalPledged}
+          supply={supply}
+          price={price}
         />
       </section>
 

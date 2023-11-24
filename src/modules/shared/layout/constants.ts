@@ -4,6 +4,11 @@ const SOCIALS = [
     url: "https://twitter.com/apexwatchclub",
     path: "/assets/twitter.svg",
   },
+  {
+    name: "Discord",
+    url: "https://discord.gg/nGHN7uYd3B",
+    path: "/assets/discord.svg",
+  },
   /*
   {
     name: "Instagram",

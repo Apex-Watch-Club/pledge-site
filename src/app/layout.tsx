@@ -1,22 +1,26 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ['latin'] })
+import { WagmiWrapper } from "@/modules/shared/layout";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Apex Watch Club',
-  description: 'Apex Watch Club',
-}
+  title: "Apex Watch Club",
+  description: "Apex Watch Club",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <WagmiWrapper>
+        <body className={inter.className}>{children}</body>
+      </WagmiWrapper>
     </html>
-  )
+  );
 }
