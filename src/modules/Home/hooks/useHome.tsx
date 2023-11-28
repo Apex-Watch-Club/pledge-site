@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useAccount, useConnect, useDisconnect, useWalletClient } from "wagmi";
+import { Address } from "viem";
 import { InjectedConnector } from "wagmi/connectors/injected";
 
 import useCounter from "./useCounter";
@@ -16,8 +17,19 @@ export default function useHome() {
   const { data: wallet } = useWalletClient();
 
   const { counter, increment, decrement } = useCounter({ min: 1 });
-  const { price, supply, totalPledged, token, changeToken, pledge } =
-    usePledge();
+
+  const {
+    allowance,
+    price,
+    supply,
+    totalPledged,
+    token,
+    approve,
+    changeToken,
+    pledge,
+    pledged,
+    getPledged,
+  } = usePledge(address as Address);
 
   useEffect(() => {
     connect();
@@ -27,15 +39,19 @@ export default function useHome() {
     address,
     counter,
     isConnected,
+    allowance,
     price,
+    pledged,
     supply,
     totalPledged,
     token,
+    approve,
     changeToken,
     connect,
     decrement,
     disconnect,
     increment,
     pledge,
+    getPledged,
   };
 }

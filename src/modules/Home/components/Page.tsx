@@ -9,6 +9,7 @@ const metadata = require("/metadata.json");
 
 export default function Page() {
   const {
+    allowance,
     address,
     counter,
     isConnected,
@@ -16,6 +17,7 @@ export default function Page() {
     supply,
     totalPledged,
     token,
+    approve,
     changeToken,
     connect,
     decrement,
@@ -28,7 +30,9 @@ export default function Page() {
     <main className="w-full bg-[url('/assets/background.jpg')] bg-cover">
       <section className="bg-dim p-4 md:p-16 flex flex-col items-center justify-center">
         <MintModal
+          allowance={allowance}
           address={address}
+          approve={approve}
           connect={connect}
           disconnect={disconnect}
           isConnected={isConnected}

@@ -61,6 +61,7 @@ function TokenDropdown({
 }
 
 export default function MintModal({
+  allowance,
   address,
   connect,
   disconnect,
@@ -69,6 +70,7 @@ export default function MintModal({
   totalPledged,
   metadata,
   counter,
+  approve,
   changeToken,
   increment,
   decrement,
@@ -76,6 +78,7 @@ export default function MintModal({
   supply,
   price,
 }: {
+  allowance: number;
   address?: string;
   connect: () => void;
   disconnect: () => void;
@@ -83,10 +86,11 @@ export default function MintModal({
   token: string;
   metadata: Record<string, Record<string, Record<string, ERC20DescriptorType>>>;
   counter: number;
+  approve: (amount: number) => void;
   changeToken: (t: AcceptableTokensType) => void;
   increment: () => void;
   decrement: () => void;
-  pledge: (amount: number, walletClient: WalletClient) => void;
+  pledge: (amount: number) => void;
   supply: number;
   totalPledged: number;
   price: number;
@@ -153,7 +157,7 @@ export default function MintModal({
               <>
                 <button
                   className={`w-full bg-gradient-to-r text-black from-dark-gold to-light-gold px-16 py-4 rounded-sm ${robotoSlab.className}`}
-                  onClick={() => console.log("Pledging...")}
+                  onClick={() => pledge(10000)}
                 >
                   PLEDGE
                 </button>
