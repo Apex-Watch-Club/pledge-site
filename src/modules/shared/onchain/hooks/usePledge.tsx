@@ -83,6 +83,7 @@ export default function usePledge(user: Address) {
   });
 
   const getPrice = async () => {
+    console.log("ENV", ENV);
     const client = createPublicClient({
       chain: CHAINS[ENV],
       transport: http(RPC_URL),
