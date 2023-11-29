@@ -28,9 +28,13 @@ const {
 
 const ENV: AcceptableChainsType =
   (NEXT_PUBLIC_ENV as AcceptableChainsType) || "localhost";
+
+console.log("NEXT_PUBLIC_ENV", NEXT_PUBLIC_ENV);
+
 const ERC20_ABI = require("/ERC20.json").abi;
 const PLEDGE_ABI = require("/Pledge.json").abi;
 const RPC_URL = NEXT_PUBLIC_RPC_URL || "";
+
 // const TOKENS = metadata.ethereum.tokens.erc20;
 const TOKENS = {
   usdt: {
@@ -83,6 +87,8 @@ export default function usePledge(user: Address) {
       chain: CHAINS[ENV],
       transport: http(RPC_URL),
     });
+
+    console.log("CLIENT IN GET PRICE", client);
 
     try {
       const data = await client.readContract({
