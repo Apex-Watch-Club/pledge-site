@@ -43,7 +43,7 @@ const TOKENS = {
     icon: "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeiddabigc6c5ga27grotfy2bfr247eah2qs3nsjzup7z3l4r2kvggm&w=3840&q=75",
   },
 };
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS || "";
+const CONTRACT_ADDRESS = NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS || "";
 
 const PLEDGE_CONTRACT = {
   address: CONTRACT_ADDRESS as Address,
