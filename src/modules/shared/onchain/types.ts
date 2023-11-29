@@ -1,2 +1,3 @@
 type AcceptableTokensType = "usdt" | "usdc";
-export type { AcceptableTokensType };
+type AcceptableChainsType = "localhost" | "goerli" | "mainnet";
+export type { AcceptableTokensType, AcceptableChainsType };

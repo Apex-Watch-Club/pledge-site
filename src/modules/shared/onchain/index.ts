@@ -1,4 +1,4 @@
 import usePledge from "./hooks/usePledge";
-import { AcceptableTokensType } from "./types";
+import { AcceptableTokensType, AcceptableChainsType } from "./types";
 export { usePledge };
-export type { AcceptableTokensType };
+export type { AcceptableTokensType, AcceptableChainsType };

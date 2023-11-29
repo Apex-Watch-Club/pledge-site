@@ -12,19 +12,22 @@ import {
   formatEther,
   decodeEventLog,
 } from "viem";
-import { mainnet, localhost } from "viem/chains";
+import { mainnet, localhost, goerli } from "viem/chains";
 import { anvil } from "../constants";
-import { AcceptableTokensType } from "../types";
+import { AcceptableTokensType, AcceptableChainsType } from "../types";
 
 const metadata = require("/metadata.json");
 
 const {
+  NEXT_PUBLIC_ENV,
   NEXT_PUBLIC_RPC_URL,
   NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
   NEXT_PUBLIC_USDT_CONTRACT_ADDRESS,
   NEXT_PUBLIC_USDC_CONTRACT_ADDRESS,
 } = process.env;
 
+const ENV: AcceptableChainsType =
+  (NEXT_PUBLIC_ENV as AcceptableChainsType) || "localhost";
 const ERC20_ABI = require("/ERC20.json").abi;
 const PLEDGE_ABI = require("/Pledge.json").abi;
 const RPC_URL = NEXT_PUBLIC_RPC_URL || "";
@@ -43,6 +46,13 @@ const TOKENS = {
     icon: "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeiddabigc6c5ga27grotfy2bfr247eah2qs3nsjzup7z3l4r2kvggm&w=3840&q=75",
   },
 };
+
+const CHAINS = {
+  localhost: anvil,
+  goerli,
+  mainnet,
+};
+
 const CONTRACT_ADDRESS = NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS || "";
 
 const PLEDGE_CONTRACT = {
@@ -70,7 +80,7 @@ export default function usePledge(user: Address) {
 
   const getPrice = async () => {
     const client = createPublicClient({
-      chain: anvil,
+      chain: CHAINS[ENV],
       transport: http(RPC_URL),
     });
 
@@ -108,18 +118,18 @@ export default function usePledge(user: Address) {
   const approve = async (amount: number) => {
     const walletClient = createWalletClient({
       account: user,
-      chain: anvil,
+      chain: CHAINS[ENV],
       transport: http(RPC_URL),
     });
 
     const publicClient = createPublicClient({
-      chain: anvil,
+      chain: CHAINS[ENV],
       transport: http(RPC_URL),
     });
 
     try {
       const { request } = await publicClient.simulateContract({
-        chain: anvil,
+        chain: CHAINS[ENV],
         account: user,
         address: TOKENS[token].address as Address,
         abi: ERC20_ABI,
@@ -144,12 +154,12 @@ export default function usePledge(user: Address) {
 
     const walletClient = createWalletClient({
       account: user,
-      chain: anvil,
+      chain: CHAINS[ENV],
       transport: http(RPC_URL),
     });
 
     const publicClient = createPublicClient({
-      chain: anvil,
+      chain: CHAINS[ENV],
       transport: http(RPC_URL),
     });
 
@@ -157,7 +167,7 @@ export default function usePledge(user: Address) {
     console.log("contract address", CONTRACT_ADDRESS);
 
     // const request = {
-    //   chain: anvil,
+    // chain: CHAINS[ENV],
     //   address: CONTRACT_ADDRESS as Address,
     //   abi: PLEDGE_ABI,
     //   functionName: token === "usdt" ? "pledgeUsdt" : "pledgeUsdc",
@@ -166,7 +176,7 @@ export default function usePledge(user: Address) {
 
     try {
       const { request } = await publicClient.simulateContract({
-        chain: anvil,
+        chain: CHAINS[ENV],
         address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
         functionName: "pledgeUsdt",
@@ -184,7 +194,7 @@ export default function usePledge(user: Address) {
   const getAllowance = async (): Promise<number | undefined> => {
     console.log("##### GET ALLOWANCE #####");
     const client = createPublicClient({
-      chain: anvil,
+      chain: CHAINS[ENV],
       transport: http(RPC_URL),
     });
 
@@ -205,7 +215,7 @@ export default function usePledge(user: Address) {
 
   const getBalance = async (address: string): Promise<number | undefined> => {
     const client = createPublicClient({
-      chain: anvil,
+      chain: CHAINS[ENV],
       transport: http(RPC_URL),
     });
 
@@ -224,7 +234,7 @@ export default function usePledge(user: Address) {
 
   const getPledged = async (address: string) => {
     const client = createPublicClient({
-      chain: anvil,
+      chain: CHAINS[ENV],
       transport: http(RPC_URL),
     });
 
