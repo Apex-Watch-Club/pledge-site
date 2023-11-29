@@ -83,7 +83,7 @@ export default function usePledge(user: Address) {
       });
 
       setIsError(false);
-      setPrice(Number(formatEther(data)));
+      setPrice(Number(formatEther(data as unknown as bigint)));
     } catch (err) {
       setIsError(true);
       setDiagnostic(JSON.stringify(err));
@@ -196,7 +196,7 @@ export default function usePledge(user: Address) {
         args: [user, CONTRACT_ADDRESS],
       });
 
-      setAllowance(formatEther(data));
+      setAllowance(Number(formatEther(data as unknown as bigint)));
       return Number(data);
     } catch (err) {
       console.error(err);
