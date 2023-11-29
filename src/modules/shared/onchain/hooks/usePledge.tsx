@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useContractWrite, useContractRead } from "wagmi";
+import { useState } from "react";
+import { useContractRead } from "wagmi";
 import {
   Address,
   WalletClient,
@@ -18,40 +18,45 @@ import { AcceptableTokensType } from "../types";
 
 const metadata = require("/metadata.json");
 
-const ERC20ABI = require("/ERC20.json").abi;
-const ABI = require("/Pledge.json").abi;
-const RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || "";
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "";
+const {
+  NEXT_PUBLIC_RPC_URL,
+  NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
+  NEXT_PUBLIC_USDT_CONTRACT_ADDRESS,
+  NEXT_PUBLIC_USDC_CONTRACT_ADDRESS,
+} = process.env;
 
-const unwatch = createPublicClient({
-  chain: anvil,
-  transport: http(RPC_URL),
-}).watchEvent({
-  // event: parseAbiItem("event DEBUG(uint256 _amount, uint256 _balance)"),
-  onLogs: (logs) => console.log(logs),
-});
+const ERC20_ABI = require("/ERC20.json").abi;
+const PLEDGE_ABI = require("/Pledge.json").abi;
+const RPC_URL = NEXT_PUBLIC_RPC_URL || "";
+// const TOKENS = metadata.ethereum.tokens.erc20;
+const TOKENS = {
+  usdt: {
+    address: NEXT_PUBLIC_USDT_CONTRACT_ADDRESS,
+    name: "USD Token",
+    symbol: "USDT",
+    icon: "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeidmwc7o4rle5et6n35arz462jrv5luebky6qilyiwchiheywvc7vu&w=3840&q=75",
+  },
+  usdc: {
+    address: NEXT_PUBLIC_USDC_CONTRACT_ADDRESS,
+    name: "USD Coin",
+    symbol: "USDC",
+    icon: "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeiddabigc6c5ga27grotfy2bfr247eah2qs3nsjzup7z3l4r2kvggm&w=3840&q=75",
+  },
+};
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS || "";
 
 const PLEDGE_CONTRACT = {
   address: CONTRACT_ADDRESS as Address,
-  abi: ABI,
+  abi: PLEDGE_ABI,
 };
 
 export default function usePledge(user: Address) {
   const [isError, setIsError] = useState(false);
   const [diagnostic, setDiagnostic] = useState("");
   const [token, setToken] = useState<AcceptableTokensType>("usdc");
+  const [price, setPrice] = useState(0);
   const [pledged, setPledged] = useState(0);
   const [allowance, setAllowance] = useState(0);
-
-  const {
-    data: pledgeData,
-    isLoading: isPledgeLoading,
-    isSuccess: isPledgeSuccessful,
-    write: pledgeWrite,
-  } = useContractWrite({
-    ...PLEDGE_CONTRACT,
-    functionName: "pledge",
-  });
 
   const {
     data: supplyData,
@@ -63,15 +68,28 @@ export default function usePledge(user: Address) {
     functionName: "getTotalSupply",
   });
 
-  const {
-    data: priceData,
-    isError: isPriceError,
-    isLoading: isPriceLoading,
-    refetch: getPrice,
-  } = useContractRead({
-    ...PLEDGE_CONTRACT,
-    functionName: "getPrice",
-  });
+  const getPrice = async () => {
+    const client = createPublicClient({
+      chain: anvil,
+      transport: http(RPC_URL),
+    });
+
+    try {
+      const data = await client.readContract({
+        address: PLEDGE_CONTRACT.address,
+        abi: PLEDGE_ABI,
+        functionName: "getPrice",
+        args: [],
+      });
+
+      setIsError(false);
+      setPrice(Number(formatEther(data)));
+    } catch (err) {
+      setIsError(true);
+      setDiagnostic(JSON.stringify(err));
+      console.error(err);
+    }
+  };
 
   const {
     data: totalPledgedData,
@@ -103,8 +121,8 @@ export default function usePledge(user: Address) {
       const { request } = await publicClient.simulateContract({
         chain: anvil,
         account: user,
-        address: metadata.ethereum.erc20.usdt.address as Address,
-        abi: ERC20ABI,
+        address: TOKENS[token].address as Address,
+        abi: ERC20_ABI,
         functionName: "approve",
         args: [CONTRACT_ADDRESS, parseEther(`${amount}`)],
       });
@@ -116,16 +134,13 @@ export default function usePledge(user: Address) {
   };
 
   const pledge = async (amount: number) => {
+    setIsError(false);
     console.log("##### PLEDGING #####");
     console.log("balance:", await getBalance(user));
     console.log("amount:", amount);
     const approved = Number(await getAllowance());
     console.log("allowance in pledge:", approved);
     await approve(amount);
-    // if (amount > approved) {
-    //   console.log("APPROVING...", amount);
-    //   await approve(amount);
-    // }
 
     const walletClient = createWalletClient({
       account: user,
@@ -141,25 +156,29 @@ export default function usePledge(user: Address) {
     console.log("parsed amount", parseEther(`${amount}`));
     console.log("contract address", CONTRACT_ADDRESS);
 
-    const req = {
-      chain: anvil,
-      address: CONTRACT_ADDRESS as Address,
-      abi: ABI,
-      functionName: "pledgeUsdt",
-      args: [parseEther(`${amount}`)],
-    };
-
-    // const { request } = await publicClient.simulateContract({
+    // const request = {
     //   chain: anvil,
     //   address: CONTRACT_ADDRESS as Address,
-    //   abi: ABI,
-    //   functionName: "pledgeUsdt",
+    //   abi: PLEDGE_ABI,
+    //   functionName: token === "usdt" ? "pledgeUsdt" : "pledgeUsdc",
     //   args: [parseEther(`${amount}`)],
-    // });
-    //
-    // console.log("request:", request);
+    // };
 
-    await walletClient.writeContract(req);
+    try {
+      const { request } = await publicClient.simulateContract({
+        chain: anvil,
+        address: PLEDGE_CONTRACT.address,
+        abi: PLEDGE_CONTRACT.abi,
+        functionName: "pledgeUsdt",
+        args: [parseEther(`${amount}`)],
+      });
+
+      await walletClient.writeContract(request);
+    } catch (err) {
+      setIsError(true);
+      setDiagnostic("Failed to pledge");
+      console.error(err);
+    }
   };
 
   const getAllowance = async (): Promise<number | undefined> => {
@@ -171,12 +190,13 @@ export default function usePledge(user: Address) {
 
     try {
       const data = await client.readContract({
-        address: metadata.ethereum.erc20.usdt.address as Address,
-        abi: ERC20ABI,
+        address: TOKENS[token].address as Address,
+        abi: ERC20_ABI,
         functionName: "allowance",
         args: [user, CONTRACT_ADDRESS],
       });
 
+      setAllowance(formatEther(data));
       return Number(data);
     } catch (err) {
       console.error(err);
@@ -191,8 +211,8 @@ export default function usePledge(user: Address) {
 
     try {
       const data = await client.readContract({
-        address: metadata.ethereum.erc20.usdt.address as Address,
-        abi: ERC20ABI,
+        address: TOKENS[token].address as Address,
+        abi: ERC20_ABI,
         functionName: "balanceOf",
         args: [address],
       });
@@ -211,7 +231,7 @@ export default function usePledge(user: Address) {
     try {
       const data = await client.readContract({
         address: CONTRACT_ADDRESS as Address,
-        abi: ABI,
+        abi: PLEDGE_ABI,
         functionName: "getPledged",
         args: [address],
       });
@@ -222,18 +242,15 @@ export default function usePledge(user: Address) {
     }
   };
 
-  useEffect(() => {
-    console.log("pledgeData", pledgeData);
-    console.log("totalPledgedData", totalPledgedData);
-  }, [pledgeData, totalPledgedData]);
-
   return {
-    price: Number(formatEther(priceData)),
+    price,
     supply: Number(supplyData),
     totalPledged: Number(totalPledgedData),
     token,
     pledged,
     allowance,
+    isError,
+    diagnostic,
     approve,
     changeToken,
     pledge,

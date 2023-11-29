@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { WagmiWrapper } from "@/modules/shared/layout";
+import { ClientWrapper } from "@/modules/shared/layout";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,9 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <WagmiWrapper>
+      <ClientWrapper>
         <body className={inter.className}>{children}</body>
-      </WagmiWrapper>
+      </ClientWrapper>
     </html>
   );
 }

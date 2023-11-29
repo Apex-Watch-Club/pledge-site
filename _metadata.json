@@ -1,17 +1,49 @@
 {
 	"ethereum": {
-		"erc20": {
-			"usdt": {
-				"address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-				"name": "USD Token",
-				"symbol": "USDT",
-				"icon": "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeidmwc7o4rle5et6n35arz462jrv5luebky6qilyiwchiheywvc7vu&w=3840&q=75"
+		"chains": {
+		  "id": 31337,
+		  "name": "Anvil Ethereum",
+		  "network": "anvil",
+		  "nativeCurrency": {
+			"decimals": 18,
+			"name": "Ether",
+			"symbol": "ETH"
+		  },
+		  "rpcUrls": {
+			"default": {
+			  "http": ["http://localhost:8545"],
+			  "webSocket": ["wss://localhost:8545"]
 			},
-			"usdc": {
-				"address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-				"name": "USD Coin",
-				"symbol": "USDC",
-				"icon": "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeiddabigc6c5ga27grotfy2bfr247eah2qs3nsjzup7z3l4r2kvggm&w=3840&q=75"
+			"public": {
+			  "http": ["http://localhost:8545"],
+			  "webSocket": ["wss://localhost:8545"]
+			}
+		  },
+		  "blockExplorers": {
+			"default": { "name": "Explorer", "url": "https://explorer.zora.energy" }
+		  },
+		  "contracts": {}
+		},
+		"contracts": {
+			"pledge": {
+				"address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+				"abiPath": "/Pledge.json"
+			}
+		},
+		"tokens": {
+			"erc20": {
+				"usdt": {
+					"address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+					"name": "USD Token",
+					"symbol": "USDT",
+					"icon": "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeidmwc7o4rle5et6n35arz462jrv5luebky6qilyiwchiheywvc7vu&w=3840&q=75"
+				},
+				"usdc": {
+					"address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+					"name": "USD Coin",
+					"symbol": "USDC",
+					"icon": "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeiddabigc6c5ga27grotfy2bfr247eah2qs3nsjzup7z3l4r2kvggm&w=3840&q=75"
+				}
 			}
 		}
 	}

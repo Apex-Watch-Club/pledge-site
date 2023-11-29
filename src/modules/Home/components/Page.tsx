@@ -3,6 +3,7 @@ import MintModal from "./MintModal";
 import BenefitsModal from "./BenefitsModal";
 import { useHome } from "@/modules/Home";
 import { Footer } from "@/modules/shared/layout";
+import { Toaster } from "@/modules/shared/toaster";
 import { BENEFITS } from "../constants";
 
 const metadata = require("/metadata.json");
@@ -17,12 +18,15 @@ export default function Page() {
     supply,
     totalPledged,
     token,
+    isError,
+    diagnostic,
     approve,
     changeToken,
     connect,
     decrement,
     disconnect,
     increment,
+    notify,
     pledge,
   } = useHome();
 
@@ -37,15 +41,18 @@ export default function Page() {
           disconnect={disconnect}
           isConnected={isConnected}
           token={token}
-          metadata={metadata}
+          tokens={metadata.ethereum.tokens.erc20}
           counter={counter}
           increment={increment}
           decrement={decrement}
           changeToken={changeToken}
+          notify={notify}
           pledge={pledge}
           totalPledged={totalPledged}
           supply={supply}
           price={price}
+          isError={isError}
+          diagnostic={diagnostic}
         />
       </section>
 
@@ -54,6 +61,8 @@ export default function Page() {
       </section>
 
       <Footer />
+
+      <Toaster />
     </main>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { WalletClient } from "viem";
 import { Roboto_Slab, Readex_Pro } from "next/font/google";
 import { ERC20DescriptorType } from "../types";
 import { AcceptableTokensType } from "@/modules/shared/onchain";
@@ -11,11 +10,11 @@ const readexPro = Readex_Pro({ weight: "200", subsets: ["latin"] });
 function TokenDropdown({
   token,
   changeToken,
-  metadata,
+  tokens,
 }: {
   token: string;
   changeToken: (t: AcceptableTokensType) => void;
-  metadata: Record<string, Record<string, Record<string, ERC20DescriptorType>>>;
+  tokens: Record<string, ERC20DescriptorType>;
 }) {
   {
     /*TOKEN DROPDOWN*/
@@ -33,13 +32,13 @@ function TokenDropdown({
     >
       <img
         className="w-6 mr-2"
-        src={metadata.ethereum.erc20[token].icon}
-        alt={metadata.ethereum.erc20[token].name}
+        src={tokens[token].icon}
+        alt={tokens[token].name}
       />
       <img src="/assets/chevron.svg" alt="Chevron Icon" />
       {isOpen && (
         <ul className="absolute top-12 left-0 rounded-lg bg-gray w-full grid grid-cols-1 gap-1 overflow-hidden">
-          {Object.values(metadata.ethereum.erc20).map((t, idx) => (
+          {Object.values(tokens).map((t, idx) => (
             <li
               className={
                 robotoSlab.className +
@@ -67,16 +66,19 @@ export default function MintModal({
   disconnect,
   isConnected,
   token,
+  tokens,
   totalPledged,
-  metadata,
   counter,
   approve,
   changeToken,
   increment,
   decrement,
+  notify,
   pledge,
   supply,
   price,
+  isError,
+  diagnostic,
 }: {
   allowance: number;
   address?: string;
@@ -84,23 +86,44 @@ export default function MintModal({
   disconnect: () => void;
   isConnected: boolean;
   token: string;
-  metadata: Record<string, Record<string, Record<string, ERC20DescriptorType>>>;
+  tokens: Record<string, ERC20DescriptorType>;
   counter: number;
+  isError: boolean;
+  diagnostic: string;
   approve: (amount: number) => void;
   changeToken: (t: AcceptableTokensType) => void;
   increment: () => void;
   decrement: () => void;
-  pledge: (amount: number) => void;
+  notify: (message: string) => void;
+  pledge: (amount: number) => Promise<void>;
   supply: number;
   totalPledged: number;
   price: number;
 }) {
+  const [pledging, setPledging] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const handleApprove = async () => {};
+
+  const handlePledge = async (amount: number) => {
+    setPledging(true);
+    notify(`Pledging ${amount} ${token.toUpperCase()}`);
+    await pledge(amount);
+
+    setPledging(false);
+  };
 
   useEffect(() => {
     if (mounted) return;
     setMounted(true);
   }, [isConnected]);
+
+  useEffect(() => {
+    console.log("IS ERROR DETECTED");
+    if (isError) {
+      notify(diagnostic);
+    }
+  }, [isError]);
 
   return (
     <div className="w-full max-w-[600px] bg-luxury-black border-gold border-[1px] rounded-3xl p-4">
@@ -138,11 +161,11 @@ export default function MintModal({
                 <TokenDropdown
                   token={token}
                   changeToken={changeToken}
-                  metadata={metadata}
+                  tokens={tokens}
                 />
-                <p
-                  className={robotoSlab.className + " "}
-                >{`${price} ${token.toUpperCase()} + GAS`}</p>
+                <p className={robotoSlab.className + " "}>{`${
+                  counter * price
+                } ${tokens[token].symbol.toUpperCase()} + GAS`}</p>
               </div>
             </div>
 
@@ -156,10 +179,17 @@ export default function MintModal({
             ) : (
               <>
                 <button
-                  className={`w-full bg-gradient-to-r text-black from-dark-gold to-light-gold px-16 py-4 rounded-sm ${robotoSlab.className}`}
-                  onClick={() => pledge(10000)}
+                  className={
+                    robotoSlab.className +
+                    ` w-full bg-gradient-to-r text-black from-dark-gold to-light-gold px-16 py-4 rounded-sm flex items-center justify-center`
+                  }
+                  onClick={() => handlePledge(counter * price)}
                 >
-                  PLEDGE
+                  {pledging ? (
+                    <img src="/assets/load.svg" alt="Loading Icon" />
+                  ) : (
+                    <p>PLEDGE</p>
+                  )}
                 </button>
                 <p
                   className={

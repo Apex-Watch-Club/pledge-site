@@ -5,6 +5,7 @@ import { Address } from "viem";
 import { InjectedConnector } from "wagmi/connectors/injected";
 
 import useCounter from "./useCounter";
+import { useToaster } from "@/modules/shared/toaster";
 import { usePledge } from "@/modules/shared/onchain";
 
 export default function useHome() {
@@ -18,6 +19,8 @@ export default function useHome() {
 
   const { counter, increment, decrement } = useCounter({ min: 1 });
 
+  const { notify } = useToaster();
+
   const {
     allowance,
     price,
@@ -28,11 +31,17 @@ export default function useHome() {
     changeToken,
     pledge,
     pledged,
+    getPrice,
     getPledged,
+    isError,
+    diagnostic,
   } = usePledge(address as Address);
 
   useEffect(() => {
     connect();
+    (async () => {
+      await getPrice();
+    })();
   }, []);
 
   return {
@@ -45,12 +54,15 @@ export default function useHome() {
     supply,
     totalPledged,
     token,
+    isError,
+    diagnostic,
     approve,
     changeToken,
     connect,
     decrement,
     disconnect,
     increment,
+    notify,
     pledge,
     getPledged,
   };
