@@ -26,6 +26,8 @@ const {
   NEXT_PUBLIC_USDC_CONTRACT_ADDRESS,
 } = process.env;
 
+console.log("process.env", process.env);
+
 const ENV: AcceptableChainsType =
   (NEXT_PUBLIC_ENV as AcceptableChainsType) || "localhost";
 
