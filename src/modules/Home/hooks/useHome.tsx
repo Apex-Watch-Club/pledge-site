@@ -33,14 +33,21 @@ export default function useHome() {
     pledged,
     getPrice,
     getPledged,
+    getTotalSupply,
+    getTotalPledgedCount,
     isError,
     diagnostic,
   } = usePledge(address as Address);
 
   useEffect(() => {
+    // on mount
     connect();
     (async () => {
-      await getPrice();
+      try {
+        await Promise.all([getPrice, getTotalSupply, getTotalPledgedCount]);
+      } catch (err) {
+        console.error("In useHome mount:", err);
+      }
     })();
   }, []);
 

@@ -81,18 +81,56 @@ export default function usePledge(user: Address) {
   const [diagnostic, setDiagnostic] = useState("");
   const [token, setToken] = useState<AcceptableTokensType>("usdc");
   const [price, setPrice] = useState(0);
+  const [supply, setSupply] = useState(0);
+  const [totalPledged, setTotalPledged] = useState(0);
   const [pledged, setPledged] = useState(0);
   const [allowance, setAllowance] = useState(0);
 
-  const {
-    data: supplyData,
-    isError: isSupplyError,
-    isLoading: isSupplyLoading,
-    refetch: getTotalSupply,
-  } = useContractRead({
-    ...PLEDGE_CONTRACT,
-    functionName: "getTotalSupply",
-  });
+  const getTotalSupply = async () => {
+    const client = createPublicClient({
+      chain: CHAINS[ENV],
+      transport: http(RPC_URL),
+    });
+
+    try {
+      const data = await client.readContract({
+        address: PLEDGE_CONTRACT.address,
+        abi: PLEDGE_CONTRACT.abi,
+        functionName: "getTotalSupply",
+        args: [],
+      });
+
+      setIsError(false);
+      setSupply(Number(formatEther(data as unknown as bigint)));
+    } catch (err) {
+      setIsError(true);
+      setDiagnostic(JSON.stringify(err));
+      console.error(err);
+    }
+  };
+
+  const getTotalPledgedCount = async () => {
+    const client = createPublicClient({
+      chain: CHAINS[ENV],
+      transport: http(RPC_URL),
+    });
+
+    try {
+      const data = await client.readContract({
+        address: PLEDGE_CONTRACT.address,
+        abi: PLEDGE_CONTRACT.abi,
+        functionName: "getTotalPledgedCount",
+        args: [],
+      });
+
+      setIsError(false);
+      setTotalPledged(Number(formatEther(data as unknown as bigint)));
+    } catch (err) {
+      setIsError(true);
+      setDiagnostic(JSON.stringify(err));
+      console.error(err);
+    }
+  };
 
   const getPrice = async () => {
     console.log("ENV", ENV);
@@ -106,7 +144,7 @@ export default function usePledge(user: Address) {
     try {
       const data = await client.readContract({
         address: PLEDGE_CONTRACT.address,
-        abi: PLEDGE_ABI,
+        abi: PLEDGE_CONTRACT.abi,
         functionName: "getPrice",
         args: [],
       });
@@ -119,16 +157,6 @@ export default function usePledge(user: Address) {
       console.error(err);
     }
   };
-
-  const {
-    data: totalPledgedData,
-    isError: isTotalPledgedError,
-    isLoading: isTotalPledgedLoading,
-    refetch: getTotalPledgedCount,
-  } = useContractRead({
-    ...PLEDGE_CONTRACT,
-    functionName: "getTotalPledgedCount",
-  });
 
   const changeToken = (t: AcceptableTokensType) => {
     setToken(t);
@@ -188,7 +216,7 @@ export default function usePledge(user: Address) {
     // const request = {
     // chain: CHAINS[ENV],
     //   address: CONTRACT_ADDRESS as Address,
-    //   abi: PLEDGE_ABI,
+    //   abi: PLEDGE_CONTRACT.abi,
     //   functionName: token === "usdt" ? "pledgeUsdt" : "pledgeUsdc",
     //   args: [parseEther(`${amount}`)],
     // };
@@ -260,7 +288,7 @@ export default function usePledge(user: Address) {
     try {
       const data = await client.readContract({
         address: CONTRACT_ADDRESS as Address,
-        abi: PLEDGE_ABI,
+        abi: PLEDGE_CONTRACT.abi,
         functionName: "getPledged",
         args: [address],
       });
@@ -273,8 +301,8 @@ export default function usePledge(user: Address) {
 
   return {
     price,
-    supply: Number(supplyData),
-    totalPledged: Number(totalPledgedData),
+    supply,
+    totalPledged,
     token,
     pledged,
     allowance,
