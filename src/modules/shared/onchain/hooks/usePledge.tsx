@@ -18,23 +18,13 @@ import { AcceptableTokensType, AcceptableChainsType } from "../types";
 
 const metadata = require("/metadata.json");
 
-// const {
-//   NEXT_PUBLIC_ENV,
-//   NEXT_PUBLIC_RPC_URL,
-//   NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
-//   NEXT_PUBLIC_USDT_CONTRACT_ADDRESS,
-//   NEXT_PUBLIC_USDC_CONTRACT_ADDRESS,
-// } = process.env;
-
-const NEXT_PUBLIC_ENV = "goerli";
-const NEXT_PUBLIC_RPC_URL =
-  "https://eth-goerli.g.alchemy.com/v2/iqutKCtSJcHpdW9WQVc2Zn08iK8yP9wz";
-const NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS =
-  "0x3f146fA729088026CA7133264F86ca4dCdF92B3A";
-const NEXT_PUBLIC_USDT_CONTRACT_ADDRESS =
-  "0xb20303302b50632d77c33b056F4A30B6A658995D";
-const NEXT_PUBLIC_USDC_CONTRACT_ADDRESS =
-  "0xe53e949eF30e5E725FCd7705701C810F87dEe8DF";
+const {
+  NEXT_PUBLIC_ENV,
+  NEXT_PUBLIC_RPC_URL,
+  NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
+  NEXT_PUBLIC_USDT_CONTRACT_ADDRESS,
+  NEXT_PUBLIC_USDC_CONTRACT_ADDRESS,
+} = process.env;
 
 console.log("process.env", process.env);
 
