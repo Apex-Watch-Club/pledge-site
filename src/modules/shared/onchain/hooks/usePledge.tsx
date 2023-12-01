@@ -101,7 +101,7 @@ export default function usePledge(user: Address) {
       });
 
       setIsError(false);
-      setSupply(Number(formatEther(data as unknown as bigint)));
+      setSupply(Number(data));
     } catch (err) {
       setIsError(true);
       setDiagnostic(JSON.stringify(err));
@@ -124,7 +124,7 @@ export default function usePledge(user: Address) {
       });
 
       setIsError(false);
-      setTotalPledged(Number(formatEther(data as unknown as bigint)));
+      setTotalPledged(Number(data));
     } catch (err) {
       setIsError(true);
       setDiagnostic(JSON.stringify(err));

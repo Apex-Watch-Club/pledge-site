@@ -44,7 +44,12 @@ export default function useHome() {
     connect();
     (async () => {
       try {
-        await Promise.all([getPrice, getTotalSupply, getTotalPledgedCount]);
+        const promises = await Promise.all([
+          getPrice(),
+          getTotalSupply(),
+          getTotalPledgedCount(),
+        ]);
+        console.log("In useHome mount promises:", promises);
       } catch (err) {
         console.error("In useHome mount:", err);
       }
