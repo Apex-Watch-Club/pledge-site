@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Roboto_Slab, Readex_Pro } from "next/font/google";
 import { Connector } from "wagmi";
-import { WalletClient } from "viem";
+import { motion } from "framer-motion";
 import { ERC20DescriptorType } from "../types";
 import { AcceptableTokensType } from "@/modules/shared/onchain";
 
@@ -30,7 +30,6 @@ export default function MintModal({
   price,
   isError,
   diagnostic,
-  wallet,
 }: {
   allowance: number;
   address?: string;
@@ -52,15 +51,12 @@ export default function MintModal({
   supply: number;
   totalPledged: number;
   price: number;
-  wallet: WalletClient | undefined;
 }) {
   const [pledging, setPledging] = useState(false);
   const [approving, setApproving] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const handleApprove = async (amount: number) => {
-    if (!wallet) return;
-
     setApproving(true);
     notify(`Approving ${amount} ${token.toUpperCase()}`);
     await approve(amount);
@@ -150,7 +146,17 @@ export default function MintModal({
                     onClick={() => handlePledge(counter * price)}
                   >
                     {pledging ? (
-                      <img src="/assets/load.svg" alt="Loading Icon" />
+                      <motion.span
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          ease: "linear",
+                          repeat: Infinity,
+                          duration: 0.5,
+                          type: "tween",
+                        }}
+                      >
+                        <img src="/assets/load.svg" alt="Loading Icon" />
+                      </motion.span>
                     ) : (
                       <p>PLEDGE</p>
                     )}
@@ -164,7 +170,17 @@ export default function MintModal({
                     onClick={() => handleApprove(counter * price)}
                   >
                     {approving ? (
-                      <img src="/assets/load.svg" alt="Loading Icon" />
+                      <motion.span
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          ease: "linear",
+                          repeat: Infinity,
+                          duration: 0.5,
+                          type: "tween",
+                        }}
+                      >
+                        <img src="/assets/load.svg" alt="Loading Icon" />
+                      </motion.span>
                     ) : (
                       <p>APPROVE</p>
                     )}
