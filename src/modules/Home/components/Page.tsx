@@ -29,14 +29,12 @@ export default function Page() {
     increment,
     notify,
     pledge,
-    wallet,
   } = useHome();
 
   return (
     <main className="w-full bg-[url('/assets/background.jpg')] bg-cover">
       <section className="bg-dim p-4 md:p-16 flex flex-col items-center justify-center">
         <MintModal
-          wallet={wallet}
           allowance={allowance}
           address={address}
           approve={approve}
