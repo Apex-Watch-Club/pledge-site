@@ -54,10 +54,8 @@ const CHAINS = {
   mainnet,
 };
 
-const CONTRACT_ADDRESS = NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS || "";
-
 const PLEDGE_CONTRACT = {
-  address: CONTRACT_ADDRESS as Address,
+  address: NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS as Address,
   abi: PLEDGE_ABI,
 };
 
@@ -155,6 +153,7 @@ export default function usePledge(user: Address) {
         functionName: token === "usdt" ? "pledgeUsdt" : "pledgeUsdc",
         args: [parseEther(`${amount}`)],
       });
+      console.log(request);
 
       const { hash } = await writeContract(request);
     } catch (err) {

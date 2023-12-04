@@ -13,7 +13,7 @@ const LOCALHOST_RPC_URL = "http://localhost:8545";
 const ALCHEMY_API_KEY = "iqutKCtSJcHpdW9WQVc2Zn08iK8yP9wz";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [localhost, goerli, mainnet],
+  [goerli, mainnet, localhost],
   [
     jsonRpcProvider({ rpc: (chain) => ({ http: LOCALHOST_RPC_URL }) }),
     alchemyProvider({ apiKey: ALCHEMY_API_KEY }),
