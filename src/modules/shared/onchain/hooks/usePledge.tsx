@@ -81,6 +81,7 @@ export default function usePledge(user: Address) {
       });
       setSupply(Number(data));
     } catch (err) {
+      console.error(err);
       setIsError(true);
       setDiagnostic(
         `Failed to get supply from contract: ${PLEDGE_CONTRACT.address}`,
@@ -99,6 +100,7 @@ export default function usePledge(user: Address) {
       });
       setTotalPledged(Number(data));
     } catch (err) {
+      console.error(err);
       setIsError(true);
       setDiagnostic(
         `Failed to get totalPledged from contract: ${PLEDGE_CONTRACT.address}`,
@@ -117,6 +119,7 @@ export default function usePledge(user: Address) {
       });
       setPrice(Number(formatEther(data as unknown as bigint)));
     } catch (err) {
+      console.error(err);
       setIsError(true);
       setDiagnostic(
         `Failed to get price from contract: ${PLEDGE_CONTRACT.address}`,
@@ -139,6 +142,7 @@ export default function usePledge(user: Address) {
       });
       const { hash } = await writeContract(request);
     } catch (err) {
+      console.error(err);
       setIsError(true);
       setDiagnostic(`Approval of ${amount} ${token.toUpperCase()} failed`);
     }
@@ -174,6 +178,7 @@ export default function usePledge(user: Address) {
       });
       setAllowance(Number(formatEther(data as unknown as bigint)));
     } catch (err) {
+      console.error(err);
       setIsError(true);
       setDiagnostic(
         `Failed to get allowance of ${user} for contract: ${PLEDGE_CONTRACT.address}`,
@@ -192,6 +197,7 @@ export default function usePledge(user: Address) {
       });
       setBalance(Number(formatEther(data as unknown as bigint)));
     } catch (err) {
+      console.error(err);
       setIsError(true);
       setDiagnostic(`Failed to get balance for ${user}`);
     }
@@ -208,6 +214,7 @@ export default function usePledge(user: Address) {
       });
       setPledged(Number(formatEther(data as unknown as bigint)));
     } catch (err) {
+      console.error(err);
       setIsError(true);
       setDiagnostic(`Failed to get pledge balance for ${user}`);
     }
