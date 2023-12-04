@@ -157,6 +157,7 @@ export default function usePledge(user: Address) {
 
       const { hash } = await writeContract(request);
     } catch (err) {
+      console.error(err);
       setIsError(true);
       setDiagnostic(`Pledging of ${amount} ${token.toUpperCase()} failed`);
     }
