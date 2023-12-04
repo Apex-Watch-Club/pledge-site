@@ -25,10 +25,12 @@ export default function useHome() {
     totalPledged,
     token,
     approve,
+    balance,
     changeToken,
     pledge,
     pledged,
     getAllowance,
+    getBalance,
     getPrice,
     getPledged,
     getTotalSupply,
@@ -38,7 +40,7 @@ export default function useHome() {
   } = usePledge(address as Address);
 
   const handleConnect = () => {
-    if (!connectors[0].ready) return;
+    if (!connectors[0].ready || isConnected) return;
     connect({ connector: connectors[0] });
   };
 

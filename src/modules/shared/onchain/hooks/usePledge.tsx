@@ -1,22 +1,7 @@
 "use client";
 import { useState } from "react";
-import {
-  sendTransaction,
-  getContract,
-  prepareWriteContract,
-  readContract,
-  writeContract,
-  getWalletClient,
-} from "@wagmi/core";
-import {
-  Address,
-  WalletClient,
-  createPublicClient,
-  createWalletClient,
-  http,
-  parseEther,
-  formatEther,
-} from "viem";
+import { prepareWriteContract, readContract, writeContract } from "@wagmi/core";
+import { Address, parseEther, formatEther } from "viem";
 import { mainnet, localhost, goerli } from "viem/chains";
 import { anvil } from "../constants";
 import { AcceptableTokensType, AcceptableChainsType } from "../types";
@@ -85,70 +70,59 @@ export default function usePledge(user: Address) {
   const [totalPledged, setTotalPledged] = useState(0);
   const [pledged, setPledged] = useState(0);
   const [allowance, setAllowance] = useState(0);
+  const [balance, setBalance] = useState(0);
 
   const getTotalSupply = async () => {
     setIsError(false);
-    const client = createPublicClient({
-      chain: CHAINS[ENV],
-      transport: http(RPC_URL),
-    });
-
     try {
-      const data = await client.readContract({
+      const data = await readContract({
         address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
         functionName: "getTotalSupply",
         args: [],
       });
-
       setSupply(Number(data));
     } catch (err) {
       setIsError(true);
-      setDiagnostic(JSON.stringify(err));
+      setDiagnostic(
+        `Failed to get supply from contract: ${PLEDGE_CONTRACT.address}`,
+      );
     }
   };
 
   const getTotalPledgedCount = async () => {
     setIsError(false);
-    const client = createPublicClient({
-      chain: CHAINS[ENV],
-      transport: http(RPC_URL),
-    });
-
     try {
-      const data = await client.readContract({
+      const data = await readContract({
         address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
         functionName: "getTotalPledgedCount",
         args: [],
       });
-
       setTotalPledged(Number(data));
     } catch (err) {
       setIsError(true);
-      setDiagnostic(JSON.stringify(err));
+      setDiagnostic(
+        `Failed to get totalPledged from contract: ${PLEDGE_CONTRACT.address}`,
+      );
     }
   };
 
   const getPrice = async () => {
     setIsError(false);
-    const client = createPublicClient({
-      chain: CHAINS[ENV],
-      transport: http(RPC_URL),
-    });
-
     try {
-      const data = await client.readContract({
+      const data = await readContract({
         address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
         functionName: "getPrice",
         args: [],
       });
-
       setPrice(Number(formatEther(data as unknown as bigint)));
     } catch (err) {
       setIsError(true);
-      setDiagnostic(JSON.stringify(err));
+      setDiagnostic(
+        `Failed to get price from contract: ${PLEDGE_CONTRACT.address}`,
+      );
     }
   };
 
@@ -191,8 +165,6 @@ export default function usePledge(user: Address) {
 
   const getAllowance = async () => {
     setIsError(false);
-    const walletClient = await getWalletClient();
-
     try {
       const data = await readContract({
         address: TOKENS[token].address as Address,
@@ -200,7 +172,6 @@ export default function usePledge(user: Address) {
         functionName: "allowance",
         args: [user, PLEDGE_CONTRACT.address],
       });
-      console.log("get allowance data", data);
       setAllowance(Number(formatEther(data as unknown as bigint)));
     } catch (err) {
       setIsError(true);
@@ -210,46 +181,35 @@ export default function usePledge(user: Address) {
     }
   };
 
-  const getBalance = async (address: string): Promise<number | undefined> => {
+  const getBalance = async () => {
     setIsError(false);
-    const client = createPublicClient({
-      chain: CHAINS[ENV],
-      transport: http(RPC_URL),
-    });
-
     try {
-      const data = await client.readContract({
+      const data = await readContract({
         address: TOKENS[token].address as Address,
         abi: ERC20_ABI,
         functionName: "balanceOf",
-        args: [address],
+        args: [user],
       });
-      return Number(data);
+      setBalance(Number(formatEther(data as unknown as bigint)));
     } catch (err) {
       setIsError(true);
-      setDiagnostic("Failed to pledge");
+      setDiagnostic(`Failed to get balance for ${user}`);
     }
   };
 
   const getPledged = async (address: string) => {
     setIsError(false);
-    const client = createPublicClient({
-      chain: CHAINS[ENV],
-      transport: http(RPC_URL),
-    });
-
     try {
-      const data = await client.readContract({
+      const data = await readContract({
         address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
         functionName: "getPledged",
         args: [address],
       });
-
-      setPledged(Number(data));
+      setPledged(Number(formatEther(data as unknown as bigint)));
     } catch (err) {
       setIsError(true);
-      setDiagnostic("Failed to pledge");
+      setDiagnostic(`Failed to get pledge balance for ${user}`);
     }
   };
 
@@ -260,12 +220,14 @@ export default function usePledge(user: Address) {
     token,
     pledged,
     allowance,
+    balance,
     isError,
     diagnostic,
     approve,
     changeToken,
     pledge,
     getAllowance,
+    getBalance,
     getPrice,
     getPledged,
     getTotalSupply,
