@@ -159,12 +159,13 @@ export default function usePledge(user: Address) {
   const approve = async (amount: number) => {
     setIsError(false);
     try {
-      const { hash } = await writeContract({
+      const { request } = await prepareWriteContract({
         address: TOKENS[token].address as Address,
         abi: ERC20_ABI,
         functionName: "approve",
         args: [PLEDGE_CONTRACT.address, parseEther(`${amount}`)],
       });
+      const { hash } = await writeContract(request);
     } catch (err) {
       setIsError(true);
       setDiagnostic(`Approval of ${amount} ${token.toUpperCase()} failed`);
@@ -177,7 +178,7 @@ export default function usePledge(user: Address) {
       const { request } = await prepareWriteContract({
         address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
-        functionName: "pledgeUsdt",
+        functionName: token === "usdt" ? "pledgeUsdt" : "pledgeUsdc",
         args: [parseEther(`${amount}`)],
       });
 
