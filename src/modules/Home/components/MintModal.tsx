@@ -1,68 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Roboto_Slab, Readex_Pro } from "next/font/google";
+import { Connector } from "wagmi";
+import { WalletClient } from "viem";
 import { ERC20DescriptorType } from "../types";
 import { AcceptableTokensType } from "@/modules/shared/onchain";
 
 const robotoSlab = Roboto_Slab({ subsets: ["latin"] });
 const readexPro = Readex_Pro({ weight: "200", subsets: ["latin"] });
 
-function TokenDropdown({
-  token,
-  changeToken,
-  tokens,
-}: {
-  token: string;
-  changeToken: (t: AcceptableTokensType) => void;
-  tokens: Record<string, ERC20DescriptorType>;
-}) {
-  {
-    /*TOKEN DROPDOWN*/
-  }
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => {
-    setIsOpen((prev) => !prev);
-  };
-
-  return (
-    <button
-      className="relative hover:bg-gray hover:cursor-pointer bg-middle-black flex items-center py-2 px-4 rounded-2xl mr-4"
-      onClick={toggle}
-    >
-      <img
-        className="w-6 mr-2"
-        src={tokens[token].icon}
-        alt={tokens[token].name}
-      />
-      <img src="/assets/chevron.svg" alt="Chevron Icon" />
-      {isOpen && (
-        <ul className="absolute top-12 left-0 rounded-lg bg-gray w-full grid grid-cols-1 gap-1 overflow-hidden">
-          {Object.values(tokens).map((t, idx) => (
-            <li
-              className={
-                robotoSlab.className +
-                " flex items-center hover:bg-luxury-black p-2"
-              }
-              key={idx}
-              onClick={() =>
-                changeToken(t.symbol.toLowerCase() as AcceptableTokensType)
-              }
-            >
-              <img className="w-4 h-4 mr-1" src={t.icon} alt={t.name} />
-              {t.symbol}
-            </li>
-          ))}
-        </ul>
-      )}
-    </button>
-  );
-}
-
 export default function MintModal({
   allowance,
   address,
-  connect,
+  handleConnect,
+  connectors,
   disconnect,
   isConnected,
   token,
@@ -79,10 +30,12 @@ export default function MintModal({
   price,
   isError,
   diagnostic,
+  wallet,
 }: {
   allowance: number;
   address?: string;
-  connect: () => void;
+  handleConnect: () => void;
+  connectors: Connector[];
   disconnect: () => void;
   isConnected: boolean;
   token: string;
@@ -90,7 +43,7 @@ export default function MintModal({
   counter: number;
   isError: boolean;
   diagnostic: string;
-  approve: (amount: number) => void;
+  approve: (amount: number) => Promise<void>;
   changeToken: (t: AcceptableTokensType) => void;
   increment: () => void;
   decrement: () => void;
@@ -99,11 +52,22 @@ export default function MintModal({
   supply: number;
   totalPledged: number;
   price: number;
+  wallet: WalletClient | undefined;
 }) {
   const [pledging, setPledging] = useState(false);
+  const [approving, setApproving] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const handleApprove = async () => {};
+  const handleApprove = async (amount: number) => {
+    if (!wallet) return;
+
+    setApproving(true);
+    notify(`Approving ${amount} ${token.toUpperCase()}`);
+    await approve(amount);
+    console.log("approve failed");
+
+    setApproving(false);
+  };
 
   const handlePledge = async (amount: number) => {
     setPledging(true);
@@ -119,7 +83,6 @@ export default function MintModal({
   }, [isConnected]);
 
   useEffect(() => {
-    console.log("IS ERROR DETECTED");
     if (isError) {
       notify(diagnostic);
     }
@@ -172,25 +135,41 @@ export default function MintModal({
             {!isConnected ? (
               <button
                 className={`w-full bg-gradient-to-r text-black from-dark-gold to-light-gold px-16 py-4 rounded-sm ${robotoSlab.className}`}
-                onClick={connect}
+                onClick={handleConnect}
               >
                 CONNECT WALLET
               </button>
             ) : (
               <>
-                <button
-                  className={
-                    robotoSlab.className +
-                    ` w-full bg-gradient-to-r text-black from-dark-gold to-light-gold px-16 py-4 rounded-sm flex items-center justify-center`
-                  }
-                  onClick={() => handlePledge(counter * price)}
-                >
-                  {pledging ? (
-                    <img src="/assets/load.svg" alt="Loading Icon" />
-                  ) : (
-                    <p>PLEDGE</p>
-                  )}
-                </button>
+                {allowance >= counter * price ? (
+                  <button
+                    className={
+                      robotoSlab.className +
+                      ` w-full bg-gradient-to-r text-black from-dark-gold to-light-gold px-16 py-4 rounded-sm flex items-center justify-center`
+                    }
+                    onClick={() => handlePledge(counter * price)}
+                  >
+                    {pledging ? (
+                      <img src="/assets/load.svg" alt="Loading Icon" />
+                    ) : (
+                      <p>PLEDGE</p>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    className={
+                      robotoSlab.className +
+                      ` w-full bg-gradient-to-r text-black from-dark-gold to-light-gold px-16 py-4 rounded-sm flex items-center justify-center`
+                    }
+                    onClick={() => handleApprove(counter * price)}
+                  >
+                    {approving ? (
+                      <img src="/assets/load.svg" alt="Loading Icon" />
+                    ) : (
+                      <p>APPROVE</p>
+                    )}
+                  </button>
+                )}
                 <p
                   className={
                     readexPro.className + " text-gray text-center mt-4"
@@ -203,6 +182,58 @@ export default function MintModal({
           </>
         )}
       </div>
+      <h1>{`ALLOWANCE: ${allowance} >= ${counter * price}`}</h1>
     </div>
+  );
+}
+
+function TokenDropdown({
+  token,
+  changeToken,
+  tokens,
+}: {
+  token: string;
+  changeToken: (t: AcceptableTokensType) => void;
+  tokens: Record<string, ERC20DescriptorType>;
+}) {
+  {
+    /*TOKEN DROPDOWN*/
+  }
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => {
+    setIsOpen((prev) => !prev);
+  };
+  return (
+    <button
+      className="relative hover:bg-gray hover:cursor-pointer bg-middle-black flex items-center py-2 px-4 rounded-2xl mr-4"
+      onClick={toggle}
+    >
+      <img
+        className="w-6 mr-2"
+        src={tokens[token].icon}
+        alt={tokens[token].name}
+      />
+      <img src="/assets/chevron.svg" alt="Chevron Icon" />
+      {isOpen && (
+        <ul className="absolute top-12 left-0 rounded-lg bg-gray w-full grid grid-cols-1 gap-1 overflow-hidden">
+          {Object.values(tokens).map((t, idx) => (
+            <li
+              className={
+                robotoSlab.className +
+                " flex items-center hover:bg-luxury-black p-2"
+              }
+              key={idx}
+              onClick={() =>
+                changeToken(t.symbol.toLowerCase() as AcceptableTokensType)
+              }
+            >
+              <img className="w-4 h-4 mr-1" src={t.icon} alt={t.name} />
+              {t.symbol}
+            </li>
+          ))}
+        </ul>
+      )}
+    </button>
   );
 }

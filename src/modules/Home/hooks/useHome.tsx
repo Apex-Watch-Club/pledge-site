@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 import { useAccount, useConnect, useDisconnect, useWalletClient } from "wagmi";
 import { Address } from "viem";
-import { InjectedConnector } from "wagmi/connectors/injected";
 
 import useCounter from "./useCounter";
 import { useToaster } from "@/modules/shared/toaster";
@@ -10,9 +9,7 @@ import { usePledge } from "@/modules/shared/onchain";
 
 export default function useHome() {
   const { address, isConnected } = useAccount();
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  });
+  const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
 
   const { data: wallet } = useWalletClient();
@@ -31,6 +28,7 @@ export default function useHome() {
     changeToken,
     pledge,
     pledged,
+    getAllowance,
     getPrice,
     getPledged,
     getTotalSupply,
@@ -39,22 +37,27 @@ export default function useHome() {
     diagnostic,
   } = usePledge(address as Address);
 
+  const handleConnect = () => {
+    if (!connectors[0].ready) return;
+    connect({ connector: connectors[0] });
+  };
+
   useEffect(() => {
     // on mount
-    connect();
+    handleConnect();
     (async () => {
       try {
         const promises = await Promise.all([
+          getAllowance(),
           getPrice(),
           getTotalSupply(),
           getTotalPledgedCount(),
         ]);
-        console.log("In useHome mount promises:", promises);
       } catch (err) {
         console.error("In useHome mount:", err);
       }
     })();
-  }, []);
+  }, [token]);
 
   return {
     address,
@@ -68,9 +71,11 @@ export default function useHome() {
     token,
     isError,
     diagnostic,
+    wallet,
+    connectors,
     approve,
     changeToken,
-    connect,
+    handleConnect,
     decrement,
     disconnect,
     increment,

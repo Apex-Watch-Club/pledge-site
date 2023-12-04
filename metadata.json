@@ -36,13 +36,13 @@
 					"address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
 					"name": "USD Token",
 					"symbol": "USDT",
-					"icon": "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeidmwc7o4rle5et6n35arz462jrv5luebky6qilyiwchiheywvc7vu&w=3840&q=75"
+					"icon": "/assets/usdt-icon.png"
 				},
 				"usdc": {
 					"address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
 					"name": "USD Coin",
 					"symbol": "USDC",
-					"icon": "https://app.delta.storage/_next/image?url=https%3A%2F%2Fdelta.vulcaniclabs.com%2Fgw%2Fbafybeiddabigc6c5ga27grotfy2bfr247eah2qs3nsjzup7z3l4r2kvggm&w=3840&q=75"
+					"icon": "/assets/usdc-icon.png"
 				}
 			}
 		}
