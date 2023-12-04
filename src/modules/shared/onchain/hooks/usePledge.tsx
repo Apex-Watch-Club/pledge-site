@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   sendTransaction,
   getContract,
+  prepareWriteContract,
   readContract,
   writeContract,
   getWalletClient,
@@ -157,14 +158,12 @@ export default function usePledge(user: Address) {
 
   const approve = async (amount: number) => {
     setIsError(false);
-    const walletClient = await getWalletClient();
-
     try {
       const { hash } = await writeContract({
         address: TOKENS[token].address as Address,
         abi: ERC20_ABI,
         functionName: "approve",
-        args: [CONTRACT_ADDRESS, parseEther(`${amount}`)],
+        args: [PLEDGE_CONTRACT.address, parseEther(`${amount}`)],
       });
     } catch (err) {
       setIsError(true);
@@ -174,48 +173,18 @@ export default function usePledge(user: Address) {
 
   const pledge = async (amount: number) => {
     setIsError(false);
-    console.log("##### PLEDGING #####");
-    console.log("balance:", await getBalance(user));
-    console.log("amount:", amount);
-    const approved = Number(await getAllowance());
-    console.log("allowance in pledge:", approved);
-    // await approve(amount);
-
-    const walletClient = createWalletClient({
-      account: user,
-      chain: CHAINS[ENV],
-      transport: http(RPC_URL),
-    });
-
-    const publicClient = createPublicClient({
-      chain: CHAINS[ENV],
-      transport: http(RPC_URL),
-    });
-
-    console.log("parsed amount", parseEther(`${amount}`));
-    console.log("contract address", CONTRACT_ADDRESS);
-
-    // const request = {
-    // chain: CHAINS[ENV],
-    //   address: CONTRACT_ADDRESS as Address,
-    //   abi: PLEDGE_CONTRACT.abi,
-    //   functionName: token === "usdt" ? "pledgeUsdt" : "pledgeUsdc",
-    //   args: [parseEther(`${amount}`)],
-    // };
-
     try {
-      const { request } = await publicClient.simulateContract({
-        chain: CHAINS[ENV],
+      const { request } = await prepareWriteContract({
         address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
         functionName: "pledgeUsdt",
         args: [parseEther(`${amount}`)],
       });
 
-      await walletClient.writeContract(request);
+      const { hash } = await writeContract(request);
     } catch (err) {
       setIsError(true);
-      setDiagnostic("Failed to pledge");
+      setDiagnostic(`Pledging of ${amount} ${token.toUpperCase()} failed`);
     }
   };
 
@@ -270,7 +239,7 @@ export default function usePledge(user: Address) {
 
     try {
       const data = await client.readContract({
-        address: CONTRACT_ADDRESS as Address,
+        address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
         functionName: "getPledged",
         args: [address],
