@@ -146,7 +146,7 @@ export default function MintModal({
                     onClick={() => handlePledge(counter * price)}
                   >
                     {pledging ? (
-                      <motion.span
+                      <motion.img
                         animate={{ rotate: 360 }}
                         transition={{
                           ease: "linear",
@@ -154,9 +154,9 @@ export default function MintModal({
                           duration: 0.5,
                           type: "tween",
                         }}
-                      >
-                        <img src="/assets/load.svg" alt="Loading Icon" />
-                      </motion.span>
+                        src="/assets/load.svg"
+                        alt="Loading Icon"
+                      />
                     ) : (
                       <p>PLEDGE</p>
                     )}
@@ -170,7 +170,7 @@ export default function MintModal({
                     onClick={() => handleApprove(counter * price)}
                   >
                     {approving ? (
-                      <motion.span
+                      <motion.img
                         animate={{ rotate: 360 }}
                         transition={{
                           ease: "linear",
@@ -178,9 +178,9 @@ export default function MintModal({
                           duration: 0.5,
                           type: "tween",
                         }}
-                      >
-                        <img src="/assets/load.svg" alt="Loading Icon" />
-                      </motion.span>
+                        src="/assets/load.svg"
+                        alt="Loading Icon"
+                      />
                     ) : (
                       <p>APPROVE</p>
                     )}
