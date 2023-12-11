@@ -51,6 +51,7 @@ export default function useHome() {
       try {
         const promises = await Promise.all([
           getAllowance(),
+          getBalance(),
           getPrice(),
           getTotalSupply(),
           getTotalPledgedCount(),
@@ -64,6 +65,7 @@ export default function useHome() {
   return {
     address,
     counter,
+    balance,
     isConnected,
     allowance,
     price,

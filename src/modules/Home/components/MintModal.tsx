@@ -11,6 +11,7 @@ const readexPro = Readex_Pro({ weight: "200", subsets: ["latin"] });
 
 export default function MintModal({
   allowance,
+  balance,
   address,
   handleConnect,
   connectors,
@@ -33,6 +34,7 @@ export default function MintModal({
 }: {
   allowance: number;
   address?: string;
+  balance: number;
   handleConnect: () => void;
   connectors: Connector[];
   disconnect: () => void;
@@ -58,7 +60,9 @@ export default function MintModal({
 
   const handleApprove = async (amount: number) => {
     setApproving(true);
-    notify(`Approving ${amount} ${token.toUpperCase()}`);
+    notify(
+      `Approving ${amount.toLocaleString("en-US")} ${token.toUpperCase()}`,
+    );
     await approve(amount);
     console.log("approve failed");
 
@@ -67,7 +71,7 @@ export default function MintModal({
 
   const handlePledge = async (amount: number) => {
     setPledging(true);
-    notify(`Pledging ${amount} ${token.toUpperCase()}`);
+    notify(`Pledging ${amount.toLocaleString("en-US")} ${token.toUpperCase()}`);
     await pledge(amount);
 
     setPledging(false);
@@ -91,7 +95,7 @@ export default function MintModal({
           <>
             <img src="/assets/nft.png" alt="VIP Card" />
 
-            <div className="border-b-[1px] border-b-gray py-8">
+            <div className="border-b-[1px] border-b-gray py-8 mb-4">
               <p
                 className={robotoSlab.className + " text-center mb-4"}
               >{`TOTAL MINTED: ${totalPledged}/${supply}`}</p>
@@ -114,7 +118,15 @@ export default function MintModal({
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-center p-8 my-4">
+            <div>
+              <p
+                className={readexPro.className + " w-full text-right text-gray"}
+              >{`wallet balance: ${balance.toLocaleString(
+                "en-US",
+              )} ${token.toUpperCase()}`}</p>
+            </div>
+
+            <div className="flex flex-col md:flex-row justify-between items-center pb-8 pt-2 my-4">
               <p className={robotoSlab.className + " "}>TOTAL</p>
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <TokenDropdown
@@ -122,9 +134,11 @@ export default function MintModal({
                   changeToken={changeToken}
                   tokens={tokens}
                 />
-                <p className={robotoSlab.className + " "}>{`${
+                <p className={robotoSlab.className + " "}>{`${(
                   counter * price
-                } ${tokens[token].symbol.toUpperCase()} + GAS`}</p>
+                ).toLocaleString("en-US")} ${tokens[
+                  token
+                ].symbol.toUpperCase()} + GAS`}</p>
               </div>
             </div>
 
@@ -139,6 +153,7 @@ export default function MintModal({
               <>
                 {allowance >= counter * price ? (
                   <button
+                    disabled={pledging}
                     className={
                       robotoSlab.className +
                       ` w-full bg-gradient-to-r text-black from-dark-gold to-light-gold px-16 py-4 rounded-sm flex items-center justify-center`
@@ -163,6 +178,7 @@ export default function MintModal({
                   </button>
                 ) : (
                   <button
+                    disabled={approving}
                     className={
                       robotoSlab.className +
                       ` w-full bg-gradient-to-r text-black from-dark-gold to-light-gold px-16 py-4 rounded-sm flex items-center justify-center`
@@ -198,7 +214,6 @@ export default function MintModal({
           </>
         )}
       </div>
-      <h1>{`ALLOWANCE: ${allowance} >= ${counter * price}`}</h1>
     </div>
   );
 }

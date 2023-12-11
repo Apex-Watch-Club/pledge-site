@@ -11,6 +11,7 @@ const metadata = require("/metadata.json");
 export default function Page() {
   const {
     allowance,
+    balance,
     address,
     counter,
     isConnected,
@@ -36,6 +37,7 @@ export default function Page() {
       <section className="bg-dim p-4 md:p-16 flex flex-col items-center justify-center">
         <MintModal
           allowance={allowance}
+          balance={balance}
           address={address}
           approve={approve}
           handleConnect={handleConnect}
