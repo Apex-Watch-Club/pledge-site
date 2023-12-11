@@ -1,10 +1,3 @@
-// const {
-//   NEXT_PUBLIC_ENV, NEXT_PUBLIC_RPC_URL,
-//   NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
-//   NEXT_PUBLIC_USDT_CONTRACT_ADDRESS,
-//   NEXT_PUBLIC_USDC_CONTRACT_ADDRESS,
-// } = process.env;
-
 const NEXT_PUBLIC_ENV = "mainnet";
 const NEXT_PUBLIC_RPC_URL =
   "https://eth-mainnet.g.alchemy.com/v2/htOoeuPRkBpfFb9nNyUdhNioA0hHb-yb";
