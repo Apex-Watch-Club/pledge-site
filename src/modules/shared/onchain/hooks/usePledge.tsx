@@ -129,7 +129,6 @@ export default function usePledge(user: Address) {
         functionName: token === "usdt" ? "pledgeUsdt" : "pledgeUsdc",
         args: [parseEther(`${amount}`)],
       });
-      console.log(request);
 
       const { hash } = await writeContract(request);
     } catch (err) {

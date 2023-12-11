@@ -64,7 +64,6 @@ export default function MintModal({
       `Approving ${amount.toLocaleString("en-US")} ${token.toUpperCase()}`,
     );
     await approve(amount);
-    console.log("approve failed");
 
     setApproving(false);
   };

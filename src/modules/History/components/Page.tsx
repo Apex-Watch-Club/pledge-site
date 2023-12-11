@@ -38,10 +38,6 @@ export default function Page() {
           toBlock: blockNumber,
         });
 
-        // receivedLogs.forEach((l) =>
-        //   console.log(decodeEventLog({ abi: PLEDGE_ABI, ...l })),
-        // );
-
         const decodedLogs: LogType[] = receivedLogs.map((l) => {
           const dLog = l.args;
 
@@ -56,10 +52,7 @@ export default function Page() {
         const mergedLogs: Record<string, EntryType> = {};
 
         decodedLogs.forEach((eachLog) => {
-          console.log("eachLog", eachLog);
-          console.log("from", eachLog.from);
           if (Object.keys(mergedLogs).includes(eachLog.from)) {
-            console.log("exists", mergedLogs);
             mergedLogs[eachLog.from].total += eachLog.amount;
           } else {
             mergedLogs[eachLog.from] = { total: eachLog.amount };
