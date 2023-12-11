@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { prepareWriteContract, readContract, writeContract } from "@wagmi/core";
-import { Address, parseEther, formatEther } from "viem";
+import { Address, parseEther, parseUnits, formatEther } from "viem";
 import {
   NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
   NEXT_PUBLIC_USDT_CONTRACT_ADDRESS,
@@ -24,8 +24,8 @@ const TOKENS = {
     name: "USD Coin",
     symbol: "USDC",
     icon: "/assets/usdc-icon.png",
-    // abi: require("/USDC.json"),
-    abi: ERC20_ABI,
+    abi: require("/USDC.json"),
+    // abi: ERC20_ABI,
   },
 };
 
@@ -113,7 +113,8 @@ export default function usePledge(user: Address) {
         address: TOKENS[token].address as Address,
         abi: TOKENS[token].abi,
         functionName: "approve",
-        args: [PLEDGE_CONTRACT.address, parseEther(`${amount}`)],
+        // args: [PLEDGE_CONTRACT.address, parseEther(`${amount}`)],
+        args: [PLEDGE_CONTRACT.address, parseUnits(`${amount}`, 6)],
       });
       const { hash } = await writeContract(request);
     } catch (err) {
@@ -130,7 +131,8 @@ export default function usePledge(user: Address) {
         address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
         functionName: token === "usdt" ? "pledgeUsdt" : "pledgeUsdc",
-        args: [parseEther(`${amount}`)],
+        // args: [parseEther(`${amount}`)],
+        args: [parseUnits(`${amount}`, 6)],
       });
 
       const { hash } = await writeContract(request);
