@@ -1,21 +1,29 @@
 "use client";
 import { useEffect } from "react";
-import { useAccount, useConnect, useDisconnect, useWalletClient } from "wagmi";
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useWalletClient,
+  useContractEvent,
+} from "wagmi";
 import { Address } from "viem";
 
 import useCounter from "./useCounter";
 import { useToaster } from "@/modules/shared/toaster";
 import { usePledge } from "@/modules/shared/onchain";
+import {
+  NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
+  PLEDGE_ABI,
+} from "@/modules/shared/global";
 
 export default function useHome() {
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
-
   const { data: wallet } = useWalletClient();
 
   const { counter, increment, decrement } = useCounter({ min: 1 });
-
   const { notify } = useToaster();
 
   const {
@@ -60,7 +68,7 @@ export default function useHome() {
         console.error("In useHome mount:", err);
       }
     })();
-  }, [address, token]);
+  }, [address, allowance, balance, token]);
 
   return {
     address,
