@@ -4,7 +4,6 @@ import { decodeEventLog, parseAbi, parseAbiItem, formatEther } from "viem";
 import { publicClient } from "@/modules/shared/client";
 import {
   NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
-  PLEDGE_ABI,
   AcceptableTokensType,
 } from "@/modules/shared/global";
 
