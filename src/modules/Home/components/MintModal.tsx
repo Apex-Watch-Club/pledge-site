@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { formatEther, parseEther } from "viem";
 import { Roboto_Slab, Readex_Pro } from "next/font/google";
 import { Connector } from "wagmi";
 import { motion } from "framer-motion";
@@ -212,6 +213,7 @@ export default function MintModal({
             )}
           </>
         )}
+        <p>{`ALLOWANCE: ${allowance}`}</p>
       </div>
     </div>
   );

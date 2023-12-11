@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
 import { prepareWriteContract, readContract, writeContract } from "@wagmi/core";
-import { Address, parseEther, parseUnits, formatEther } from "viem";
+import {
+  Address,
+  parseEther,
+  parseUnits,
+  formatEther,
+  formatUnits,
+} from "viem";
 import {
   NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
   NEXT_PUBLIC_USDT_CONTRACT_ADDRESS,
@@ -152,7 +158,7 @@ export default function usePledge(user: Address) {
         functionName: "allowance",
         args: [user, PLEDGE_CONTRACT.address],
       });
-      setAllowance(Number(formatEther(data as unknown as bigint)));
+      setAllowance(Number(formatUnits(data as unknown as bigint, 6)));
     } catch (err) {
       console.error(err);
       setIsError(true);
@@ -171,7 +177,7 @@ export default function usePledge(user: Address) {
         functionName: "balanceOf",
         args: [user],
       });
-      setBalance(Number(formatEther(data as unknown as bigint)));
+      setBalance(Number(formatUnits(data as unknown as bigint, 6)));
     } catch (err) {
       console.error(err);
       setIsError(true);
