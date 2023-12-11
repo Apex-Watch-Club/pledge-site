@@ -5,15 +5,16 @@
 //   NEXT_PUBLIC_USDC_CONTRACT_ADDRESS,
 // } = process.env;
 
-const NEXT_PUBLIC_ENV = "goerli";
+const NEXT_PUBLIC_ENV = "mainnet";
 const NEXT_PUBLIC_RPC_URL =
-  "https://eth-goerli.g.alchemy.com/v2/7CT8yY7l0dwFWv5tqYOedv84f2KlBa2p";
+  "https://eth-mainnet.g.alchemy.com/v2/htOoeuPRkBpfFb9nNyUdhNioA0hHb-yb";
+
 const NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS =
-  "0x18E8d85888884F2e8968948149daf6896D894160";
+  "0x9B4cc8C7ddd78A8695501c290f1b58a06e2b6Be6";
 const NEXT_PUBLIC_USDT_CONTRACT_ADDRESS =
-  "0xb20303302b50632d77c33b056F4A30B6A658995D";
+  "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 const NEXT_PUBLIC_USDC_CONTRACT_ADDRESS =
-  "0xe53e949eF30e5E725FCd7705701C810F87dEe8DF";
+  "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 
 const ERC20_ABI = require("/ERC20.json").abi;
 const PLEDGE_ABI = require("/Pledge.json").abi;
