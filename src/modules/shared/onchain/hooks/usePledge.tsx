@@ -31,7 +31,6 @@ const TOKENS = {
     symbol: "USDC",
     icon: "/assets/usdc-icon.png",
     abi: require("/USDC.json"),
-    // abi: ERC20_ABI,
   },
 };
 

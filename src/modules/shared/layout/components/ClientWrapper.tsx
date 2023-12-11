@@ -7,10 +7,12 @@ import { ToasterProvider } from "@/modules/shared/toaster";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 
-const ALCHEMY_API_KEY = "htOoeuPRkBpfFb9nNyUdhNioA0hHb-yb";
+// const ALCHEMY_API_KEY = "htOoeuPRkBpfFb9nNyUdhNioA0hHb-yb";
+const ALCHEMY_API_KEY = "7CT8yY7l0dwFWv5tqYOedv84f2KlBa2p";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet],
+  // [mainnet],
+  [goerli],
   [alchemyProvider({ apiKey: ALCHEMY_API_KEY })],
 );
 
