@@ -17,12 +17,15 @@ const TOKENS = {
     name: "USD Token",
     symbol: "USDT",
     icon: "/assets/usdt-icon.png",
+    abi: require("/USDT.json"),
   },
   usdc: {
     address: NEXT_PUBLIC_USDC_CONTRACT_ADDRESS,
     name: "USD Coin",
     symbol: "USDC",
     icon: "/assets/usdc-icon.png",
+    // abi: require("/USDC.json"),
+    abi: ERC20_ABI,
   },
 };
 
@@ -108,7 +111,7 @@ export default function usePledge(user: Address) {
     try {
       const { request } = await prepareWriteContract({
         address: TOKENS[token].address as Address,
-        abi: ERC20_ABI,
+        abi: TOKENS[token].abi,
         functionName: "approve",
         args: [PLEDGE_CONTRACT.address, parseEther(`${amount}`)],
       });
@@ -143,7 +146,7 @@ export default function usePledge(user: Address) {
     try {
       const data = await readContract({
         address: TOKENS[token].address as Address,
-        abi: ERC20_ABI,
+        abi: TOKENS[token].abi,
         functionName: "allowance",
         args: [user, PLEDGE_CONTRACT.address],
       });
@@ -162,7 +165,7 @@ export default function usePledge(user: Address) {
     try {
       const data = await readContract({
         address: TOKENS[token].address as Address,
-        abi: ERC20_ABI,
+        abi: TOKENS[token].abi,
         functionName: "balanceOf",
         args: [user],
       });

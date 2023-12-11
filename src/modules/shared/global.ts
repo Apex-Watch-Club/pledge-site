@@ -9,7 +9,7 @@ const NEXT_PUBLIC_USDT_CONTRACT_ADDRESS =
 const NEXT_PUBLIC_USDC_CONTRACT_ADDRESS =
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 
-const ERC20_ABI = require("/ERC20.json").abi;
+const ERC20_ABI = require("/OZERC20.json").abi;
 const PLEDGE_ABI = require("/Pledge.json").abi;
 
 export {
