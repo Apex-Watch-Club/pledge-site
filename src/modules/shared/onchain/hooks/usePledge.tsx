@@ -98,7 +98,7 @@ export default function usePledge(user: Address) {
         functionName: "getPrice",
         args: [],
       });
-      setPrice(Number(formatEther(data as unknown as bigint)));
+      setPrice(Number(formatUnits(data as unknown as bigint, 6)));
     } catch (err) {
       console.error(err);
       setIsError(true);
@@ -131,13 +131,15 @@ export default function usePledge(user: Address) {
   };
 
   const pledge = async (amount: number) => {
+    console.log("allowance", allowance);
+    console.log("amount", amount);
+    console.log("price", price);
     setIsError(false);
     try {
       const { request } = await prepareWriteContract({
         address: PLEDGE_CONTRACT.address,
         abi: PLEDGE_CONTRACT.abi,
         functionName: token === "usdt" ? "pledgeUsdt" : "pledgeUsdc",
-        // args: [parseEther(`${amount}`)],
         args: [parseUnits(`${amount}`, 6)],
       });
 
