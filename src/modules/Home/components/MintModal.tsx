@@ -143,14 +143,14 @@ export default function MintModal({
             </div>
 
             <div className="flex flex-col md:flex-row justify-between items-center pb-8 pt-2 my-4">
-              <p className={robotoSlab.className + " "}>TOTAL</p>
+              <p className={robotoSlab.className + " text-white"}>TOTAL</p>
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <TokenDropdown
                   token={token}
                   changeToken={changeToken}
                   tokens={tokens}
                 />
-                <p className={robotoSlab.className + " "}>{`${(
+                <p className={robotoSlab.className + " text-white"}>{`${(
                   counter * price
                 ).toLocaleString("en-US")} ${tokens[
                   token

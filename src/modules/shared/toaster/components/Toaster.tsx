@@ -23,8 +23,10 @@ export default function Toaster() {
   return (
     <div className="fixed top-0 left-0 w-10/12 md:w-3/12  h-screen bg-luxury-black p-4 z-50 drop-shadow-xl">
       <div className="flex justify-between absolute top-0 left-0 w-full bg-luxury-black p-4">
-        <h1>Toaster</h1>
-        <button onClick={toggle}>Close</button>
+        <h1 className="text-white">Toaster</h1>
+        <button className="text-white" onClick={toggle}>
+          Close
+        </button>
       </div>
 
       {/*NOTIFICATIONS*/}
