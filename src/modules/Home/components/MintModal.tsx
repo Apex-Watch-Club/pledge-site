@@ -107,7 +107,9 @@ export default function MintModal({
 
             <div className="border-b-[1px] border-b-gray py-8 mb-4">
               <p
-                className={robotoSlab.className + " text-center mb-4"}
+                className={
+                  robotoSlab.className + " text-center text-white mb-4"
+                }
               >{`TOTAL MINTED: ${totalPledged}/${supply}`}</p>
               <div className="flex justify-between items-center">
                 <button
@@ -116,7 +118,11 @@ export default function MintModal({
                 >
                   -
                 </button>
-                <span className={robotoSlab.className + " text-lg md:text-5xl"}>
+                <span
+                  className={
+                    robotoSlab.className + " text-lg text-white md:text-5xl"
+                  }
+                >
                   {counter}
                 </span>
                 <button
