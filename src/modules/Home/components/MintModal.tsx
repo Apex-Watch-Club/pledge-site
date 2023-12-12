@@ -213,7 +213,6 @@ export default function MintModal({
             )}
           </>
         )}
-        <p>{`ALLOWANCE: ${allowance}`}</p>
       </div>
     </div>
   );
