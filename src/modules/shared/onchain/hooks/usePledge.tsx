@@ -117,7 +117,7 @@ export default function usePledge(user: Address) {
       const { request } = await prepareWriteContract({
         address: TOKENS[token].address as Address,
         abi: TOKENS[token].abi,
-        functionName: token === "usdt" ? "approveUsdt" : "approveUsdc",
+        functionName: "approve",
         // args: [PLEDGE_CONTRACT.address, parseEther(`${amount}`)],
         args: [PLEDGE_CONTRACT.address, parseUnits(`${amount}`, 6)],
       });
