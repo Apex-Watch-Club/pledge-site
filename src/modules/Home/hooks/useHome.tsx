@@ -35,6 +35,8 @@ export default function useHome() {
     getTotalPledgedCount,
     isError,
     diagnostic,
+    isDone,
+    message,
   } = usePledge(address as Address);
 
   const handleConnect = () => {
@@ -73,6 +75,8 @@ export default function useHome() {
     token,
     isError,
     diagnostic,
+    isDone,
+    message,
     wallet,
     connectors,
     approve,

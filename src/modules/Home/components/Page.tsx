@@ -21,6 +21,8 @@ export default function Page() {
     token,
     isError,
     diagnostic,
+    isDone,
+    message,
     connectors,
     approve,
     changeToken,
@@ -57,6 +59,8 @@ export default function Page() {
           price={price}
           isError={isError}
           diagnostic={diagnostic}
+          isDone={isDone}
+          message={message}
         />
       </section>
 

@@ -32,6 +32,8 @@ export default function MintModal({
   price,
   isError,
   diagnostic,
+  isDone,
+  message,
 }: {
   allowance: number;
   address?: string;
@@ -45,6 +47,8 @@ export default function MintModal({
   counter: number;
   isError: boolean;
   diagnostic: string;
+  isDone: boolean;
+  message: string;
   approve: (amount: number) => Promise<void>;
   changeToken: (t: AcceptableTokensType) => void;
   increment: () => void;
@@ -87,6 +91,12 @@ export default function MintModal({
       notify(diagnostic);
     }
   }, [isError]);
+
+  useEffect(() => {
+    if (isDone) {
+      notify(message);
+    }
+  }, [isDone]);
 
   return (
     <div className="w-full max-w-[600px] bg-luxury-black border-gold border-[1px] rounded-3xl p-4">

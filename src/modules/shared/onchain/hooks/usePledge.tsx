@@ -1,6 +1,11 @@
 "use client";
 import { useState } from "react";
-import { prepareWriteContract, readContract, writeContract } from "@wagmi/core";
+import {
+  prepareWriteContract,
+  readContract,
+  writeContract,
+  waitForTransaction,
+} from "@wagmi/core";
 import {
   Address,
   parseEther,
@@ -42,6 +47,8 @@ const PLEDGE_CONTRACT = {
 export default function usePledge(user: Address) {
   const [isError, setIsError] = useState(false);
   const [diagnostic, setDiagnostic] = useState("");
+  const [isDone, setIsDone] = useState(false);
+  const [message, setMessage] = useState("");
   const [token, setToken] = useState<AcceptableTokensType>("usdc");
   const [price, setPrice] = useState(0);
   const [supply, setSupply] = useState(0);
@@ -113,6 +120,7 @@ export default function usePledge(user: Address) {
 
   const approve = async (amount: number) => {
     setIsError(false);
+    setIsDone(false);
     try {
       const { request } = await prepareWriteContract({
         address: TOKENS[token].address as Address,
@@ -122,6 +130,12 @@ export default function usePledge(user: Address) {
         args: [PLEDGE_CONTRACT.address, parseUnits(`${amount}`, 6)],
       });
       const { hash } = await writeContract(request);
+      const data = await waitForTransaction({ hash });
+      setIsDone(true);
+      setMessage(
+        `Approval of ${amount} ${token.toUpperCase()} success: ${hash}`,
+      );
+      console.log("approve tx:", hash);
     } catch (err) {
       console.error(err);
       setIsError(true);
@@ -130,10 +144,8 @@ export default function usePledge(user: Address) {
   };
 
   const pledge = async (amount: number) => {
-    console.log("allowance", allowance);
-    console.log("amount", amount);
-    console.log("price", price);
     setIsError(false);
+    setIsDone(false);
     try {
       const { request } = await prepareWriteContract({
         address: PLEDGE_CONTRACT.address,
@@ -143,6 +155,10 @@ export default function usePledge(user: Address) {
       });
 
       const { hash } = await writeContract(request);
+      const data = await waitForTransaction({ hash });
+      setIsDone(true);
+      setMessage(`Pledge of ${amount} ${token.toUpperCase()} success: ${hash}`);
+      console.log("pledge tx:", hash);
     } catch (err) {
       console.error(err);
       setIsError(true);
@@ -213,6 +229,8 @@ export default function usePledge(user: Address) {
     balance,
     isError,
     diagnostic,
+    isDone,
+    message,
     approve,
     changeToken,
     pledge,
