@@ -27,7 +27,9 @@ export default function BenefitsModal({
           >
             {b.heading.toUpperCase()}
           </h2>
-          <p className={readexPro.className + " mb-8"}>{b.description}</p>
+          <p className={readexPro.className + " text-white mb-8"}>
+            {b.description}
+          </p>
         </section>
       ))}
     </div>

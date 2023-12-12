@@ -30,7 +30,7 @@ export default function Page() {
         const receivedLogs = await publicClient.getLogs({
           address: NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
           events: parseAbi([
-            "event PledgeUsdt(address _from, address _to, uint256 _amount, uint256 _timestamp)",
+            // "event PledgeUsdt(address _from, address _to, uint256 _amount, uint256 _timestamp)",
             "event PledgeUsdc(address _from, address _to, uint256 _amount, uint256 _timestamp)",
           ]),
           fromBlock: BigInt(0),
