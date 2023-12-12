@@ -1,6 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { decodeEventLog, parseAbi, parseAbiItem, formatEther } from "viem";
+import {
+  decodeEventLog,
+  parseAbi,
+  parseAbiItem,
+  formatEther,
+  formatUnits,
+} from "viem";
 import { publicClient } from "@/modules/shared/client";
 import {
   NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
@@ -30,7 +36,6 @@ export default function Page() {
         const receivedLogs = await publicClient.getLogs({
           address: NEXT_PUBLIC_PLEDGE_CONTRACT_ADDRESS,
           events: parseAbi([
-            // "event PledgeUsdt(address _from, address _to, uint256 _amount, uint256 _timestamp)",
             "event PledgeUsdc(address _from, address _to, uint256 _amount, uint256 _timestamp)",
           ]),
           fromBlock: BigInt(0),
@@ -44,7 +49,7 @@ export default function Page() {
             timestamp: Number(dLog._timestamp),
             token: l.eventName.toLowerCase().includes("usdt") ? "usdt" : "usdc",
             from: String(dLog._from),
-            amount: Number(formatEther(dLog._amount as bigint)),
+            amount: Number(formatUnits(dLog._amount as bigint, 6)),
           };
         });
 
@@ -68,7 +73,7 @@ export default function Page() {
   }, []);
 
   return (
-    <main className="w-screen min-h-screen p-8">
+    <main className="w-screen min-h-screen p-8 text-white">
       <h1 className="text-lg font-bold p-4 border-white border-b-2">History</h1>
 
       <section>
