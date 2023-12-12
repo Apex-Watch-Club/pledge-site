@@ -32,12 +32,6 @@
 		},
 		"tokens": {
 			"erc20": {
-				"usdt": {
-					"address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-					"name": "USD Token",
-					"symbol": "USDT",
-					"icon": "/assets/usdt-icon.png"
-				},
 				"usdc": {
 					"address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
 					"name": "USD Coin",
