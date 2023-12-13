@@ -60,7 +60,7 @@ export default function useHome() {
         console.error("In useHome mount:", err);
       }
     })();
-  }, [address, allowance, balance, token]);
+  }, [address, allowance, balance, token, isDone]);
 
   return {
     address,
