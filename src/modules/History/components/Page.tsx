@@ -38,7 +38,7 @@ export default function Page() {
           events: parseAbi([
             "event PledgeUsdc(address _from, address _to, uint256 _amount, uint256 _timestamp)",
           ]),
-          fromBlock: BigInt(0),
+          fromBlock: BigInt(18861558),
           toBlock: blockNumber,
         });
 
